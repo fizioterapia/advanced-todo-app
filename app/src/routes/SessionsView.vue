@@ -1,5 +1,6 @@
 <template>
-  <div class="home">
+  <div class="container">
+    <h1>Create new session</h1>
     <input v-model="sessionName" placeholder="sessionName" @keyup.enter="create" />
     <ul>
       <li v-for="(session, index) in getSessions" :key="index">
@@ -28,14 +29,15 @@ export default {
     ...mapGetters(['getSessions'])
   },
   methods: {
-    ...mapActions(["retrieveSessions", "createSession"]),
+    ...mapActions(['retrieveSession', 'retrieveSessions', 'createSession']),
     create() {
       this.createSession(this.sessionName);
-      this.sessionName = "";
+      this.$router.push('/session/' + this.sessionName);
     }
   },
   mounted() {
     this.retrieveSessions();
+    this.retrieveSession(null);
   }
 }
 </script>

@@ -33,22 +33,35 @@ const sortSession = (sessionId) => {
     })
 }
 
+const removeEmptySession = (socket) => {
+    const session = socket.data?.session;
+
+    if(!session || !sessions[session]) {
+        return;
+    }
+
+    let delSession = true;
+
+    io.of('/').sockets.forEach((s) => {
+        if (s.data.session === session && s !== socket) {
+            delSession = false;
+        }
+    })
+
+    if (delSession) {
+        delete sessions[session];
+    }
+
+    io.emit('alert', {
+        error: true,
+        data: "Session " + session + " has expired"
+    })
+    io.emit('getSessions', makeSessions(sessions));
+}
+
 io.on('connection', (socket) => {
     socket.on('disconnect', function() {
-        const session = socket.data.session;
-        let delSession = true;
-
-        io.of('/').sockets.forEach((socket) => {
-            if (socket.data.session === session) {
-                delSession = false;
-            }
-        })
-
-        if (delSession) {
-            delete sessions[session];
-        }
-
-        socket.broadcast.emit('getSessions', makeSessions(sessions));
+        removeEmptySession(socket);
     })
 
     socket.on('getSessions', () => {
@@ -56,7 +69,9 @@ io.on('connection', (socket) => {
     })
 
     socket.on('getSession', (data) => {
-        socket.emit('getSession', sessions[data]);
+        removeEmptySession(socket);
+
+        socket.emit('getSession', sessions[data] || {});
         socket.data.session = data;
     })
 
@@ -70,8 +85,12 @@ io.on('connection', (socket) => {
                 name: data.itemName,
                 priority: 0,
                 finished: false
-            }
-        )
+            })
+
+        socket.emit('alert', {
+            error: false,
+            data: "Added item - " + data.itemName
+        })
 
         sortSession(data.sessionId)
         socket.emit('getSession', sessions[data.sessionId]);
@@ -91,8 +110,12 @@ io.on('connection', (socket) => {
 
         item.priority = parseInt(item.priority) + data.value;
 
-        sortSession(data.sessionId)
+        socket.emit('alert', {
+            error: false,
+            data: "Updated item - " + session.todos[data.itemId].name
+        })
 
+        sortSession(data.sessionId)
         socket.emit('getSession', sessions[data.sessionId]);
     })
 
@@ -110,8 +133,12 @@ io.on('connection', (socket) => {
 
         item.finished = true;
 
-        sortSession(data.sessionId)
+        socket.emit('alert', {
+            error: false,
+            data: "Finished item - " + session.todos[data.itemId].name
+        })
 
+        sortSession(data.sessionId)
         socket.emit('getSession', sessions[data.sessionId]);
     })
 
@@ -136,8 +163,7 @@ io.on('connection', (socket) => {
 
         sortSession(data)
 
-        socket.emit('getSessions', makeSessions(sessions));
-        socket.broadcast.emit('getSessions', makeSessions(sessions));
+        io.emit('getSessions', makeSessions(sessions));
     })
 });
 
