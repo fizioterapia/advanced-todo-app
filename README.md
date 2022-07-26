@@ -1,7 +1,6 @@
 # advanced todo app
 
-todo app with synchronization using websockets and vuex  
-to refactor, currently it's only proof of concept with no css
+todo app with synchronization using websockets and vuex
 
 ## screenshots
 ![Sessions](/pictures/1.png?raw=true)  
