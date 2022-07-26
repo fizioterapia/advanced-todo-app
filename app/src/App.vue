@@ -1,7 +1,4 @@
 <template>
-  <nav>
-    <router-link to="/">Go back</router-link>
-  </nav>
   <div class="alerts">
     <div v-for="(alert, index) in getAlerts" :key="index" class="alert" :class="{error: alert.error, success: !alert.error}">
       {{ alert.data }}

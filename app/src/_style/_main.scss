@@ -113,7 +113,11 @@ input {
 
   nav {
     display: flex;
-    padding: 1rem;
+    padding: 1rem 0;
+
+    width: 100%;
+    align-items: center;
+    justify-content: center;
   }
 
   .alerts {

@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <h1>{{ sessionId }}</h1>
+    <nav>
+      <router-link to="/">Go back</router-link>
+    </nav>
+    <h1>Session: {{ sessionId }}</h1>
     <input v-model="itemName" placeholder="Item Name" @keyup.enter="pushItem"/>
     <h2 v-if="getSession && getSession.todos?.length > 0">Items</h2>
     <ul v-if="getSession && getSession.todos?.length > 0">
