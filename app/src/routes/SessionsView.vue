@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <h1>Create new session</h1>
-      <input v-model="sessionName" placeholder="Session Name" @keyup.enter="create" />
-    <ul>
+    <input v-model="sessionName" placeholder="Session Name" @keyup.enter="create" />
+    <ul class="sessions">
       <li v-for="(session, index) in getSessions" :key="index">
         <router-link :to="'/session/' + session"> {{ session }} </router-link>
       </li>

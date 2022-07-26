@@ -39,6 +39,19 @@ h1, input {
   margin: 0.5rem 0;
 }
 
+ul.sessions {
+  li {
+    border: 0;
+    padding: 0;
+    width: 100%;
+
+    a {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
 ul {
   padding: 0;
   margin: 0;

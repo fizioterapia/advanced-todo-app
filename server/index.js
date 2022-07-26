@@ -49,13 +49,14 @@ const removeEmptySession = (socket) => {
     })
 
     if (delSession) {
+        io.emit('alert', {
+            error: true,
+            data: "Session " + session + " has expired"
+        })
+
         delete sessions[session];
     }
 
-    io.emit('alert', {
-        error: true,
-        data: "Session " + session + " has expired"
-    })
     io.emit('getSessions', makeSessions(sessions));
 }
 
